@@ -9,8 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     
+    let heavySubheadlineFont = Font.subheadline.weight(.heavy)
+    let largeTitleSemiBoldFont = Font.largeTitle.weight(.semibold)
+    
+    @State private var showingScore = false
+    @State private var scoreTitle = ""
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US", "Monaco"].shuffled()
-    var correctAnswer = Int.random(in: 0...2)
+    @State var correctAnswer = Int.random(in: 0...2)
 
     
     var body: some View {
@@ -18,22 +23,43 @@ struct ContentView: View {
         VStack(spacing: 30) {
             VStack {
                 Text("Tap the flag of")
+                    .font(heavySubheadlineFont)
                 Text(countries[correctAnswer])
+                    .font(largeTitleSemiBoldFont)
             }
             
             ForEach(0..<3) { number in
-                
                 Button {
-                    
+                    flagTapped(number)
                 } label: {
                     Image(countries[number])
                         .renderingMode(.original)
-                        .border(Color.black)
+                        .cornerRadius(10)
+                        .clipShape(Capsule())
                         .shadow(color: Color.black, radius: 10, x: 5, y: 5)
                 }
-
             }
         }
+        .alert(scoreTitle, isPresented: $showingScore) {
+            Button("Continue", action: askQuestion)
+        } message: {
+            Text("Your score is ???")
+        }
+    }
+    
+    private func flagTapped(_ number: Int) {
+        if number == correctAnswer {
+            scoreTitle = "Correct"
+        } else {
+            scoreTitle = "Wrong"
+        }
+        
+        showingScore = true
+    }
+    
+    private func askQuestion() {
+        countries.shuffle()
+        correctAnswer = Int.random(in: 0...2)
     }
 }
 
