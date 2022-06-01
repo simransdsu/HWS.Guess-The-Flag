@@ -7,10 +7,12 @@
 
 import SwiftUI
 
+extension Font {
+    static let heavySubheadlineFont = Font.subheadline.weight(.heavy)
+    static let largeTitleSemiBoldFont = Font.largeTitle.weight(.semibold)
+}
+
 struct ContentView: View {
-    
-    let heavySubheadlineFont = Font.subheadline.weight(.heavy)
-    let largeTitleSemiBoldFont = Font.largeTitle.weight(.semibold)
     
     @State private var showingScore = false
     @State private var scoreTitle = ""
@@ -20,23 +22,31 @@ struct ContentView: View {
     
     var body: some View {
         
-        VStack(spacing: 30) {
-            VStack {
-                Text("Tap the flag of")
-                    .font(heavySubheadlineFont)
-                Text(countries[correctAnswer])
-                    .font(largeTitleSemiBoldFont)
-            }
+        ZStack {
             
-            ForEach(0..<3) { number in
-                Button {
-                    flagTapped(number)
-                } label: {
-                    Image(countries[number])
-                        .renderingMode(.original)
-                        .cornerRadius(10)
-                        .clipShape(Capsule())
-                        .shadow(color: Color.black, radius: 10, x: 5, y: 5)
+            LinearGradient(gradient: Gradient(colors: [.blue, .black]),
+                           startPoint: .top,
+                           endPoint: .bottom)
+            .ignoresSafeArea()
+            
+            VStack(spacing: 30) {
+                VStack {
+                    Text("Tap the flag of")
+                        .font(.heavySubheadlineFont)
+                    Text(countries[correctAnswer])
+                        .font(.largeTitleSemiBoldFont)
+                }
+                
+                ForEach(0..<3) { number in
+                    Button {
+                        flagTapped(number)
+                    } label: {
+                        Image(countries[number])
+                            .renderingMode(.original)
+                            .cornerRadius(10)
+                            .clipShape(Capsule())
+                            .shadow(color: Color.black, radius: 10, x: 5, y: 5)
+                    }
                 }
             }
         }
